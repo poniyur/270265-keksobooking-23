@@ -1,10 +1,8 @@
 import {getRandomPositiveFloat, getRandomPositiveInt, getRandomValueFromArray, getRandomValuesFromArray} from './util.js';
 
 let announceIndex = 0;
-const location = {
-  lat: 0,
-  lng: 0,
-};
+let latitude = 0;
+let longitude = 0;
 const types = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
 const times = ['12:00', '13:00', '14:00'];
 const features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -22,11 +20,11 @@ const getAvatar = () => {
 const getTitle = () => `Тестовый заголовок № ${announceIndex}`;
 
 const generateLocation = () => {
-  location.lat = getRandomPositiveFloat(35.65, 35.7, 5);
-  location.lng = getRandomPositiveFloat(139.7, 139.8, 5);
+  latitude = getRandomPositiveFloat(35.65, 35.7, 5);
+  longitude = getRandomPositiveFloat(139.7, 139.8, 5);
 };
 
-const getAddress = () => `${location.lat}, ${location.lng}`;
+const getAddress = () => `${latitude}, ${longitude}`;
 
 const getPrice = () => getRandomPositiveInt(1, 99999);
 
@@ -46,13 +44,13 @@ const getDescription = () => `Тестовое описание помещени
 
 const getPhotos = () => getRandomValuesFromArray(photos);
 
-const getLocation = () => location;
+const getLocation = () => ({lat: latitude, lng: longitude});
 
 const getAnnounce = () => {
   announceIndex++;
   generateLocation();
 
-  const result = {
+  return {
     author: {
       avatar: getAvatar(),
     },
@@ -71,8 +69,6 @@ const getAnnounce = () => {
     },
     location: getLocation(),
   };
-
-  return result;
 };
 
 const generateTestData = (count = 10) => Array.from({length: count}, getAnnounce);

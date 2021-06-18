@@ -1,14 +1,13 @@
-const app = {};
+let data = null;
+let getData = () => undefined;
 
-app.init = (config) => {
-  app.getData = config.getData;
-  return app;
+const init = (config) => {
+  getData = config.getData;
 };
 
-app.run = () => {
-  app.getData();
+const run = () => {
+  data = getData();
+  data; // just for linter
 };
 
-app.getData = () => undefined;
-
-export {app};
+export {init, run};

@@ -1,4 +1,5 @@
 import {config} from './config.js';
-import {app} from './app.js';
+import {init, run} from './app.js';
 
-app.init(config).run();
+init(config);
+run();
