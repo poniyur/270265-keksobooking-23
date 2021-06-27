@@ -30,7 +30,7 @@ const getPrice = () => getRandomPositiveInt(1, 99999);
 
 const getType = () => getRandomValueFromArray(types);
 
-const getRoom = () => getRandomPositiveInt(1, 10);
+const getRooms = () => getRandomPositiveInt(1, 10);
 
 const getGuests = () => getRandomPositiveInt(1, 10);
 
@@ -59,7 +59,7 @@ const getAnnounce = () => {
       address: getAddress(),
       price: getPrice(),
       type: getType(),
-      room: getRoom(),
+      rooms: getRooms(),
       guests: getGuests(),
       checkin: getCheckIn(),
       checkout: getCheckOut(),

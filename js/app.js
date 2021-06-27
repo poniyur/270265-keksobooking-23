@@ -1,13 +1,9 @@
-let data = null;
-let getData = () => undefined;
+import {generateTestData} from './dataGenerator.js';
+import {init as cardsInit} from './cards.js';
 
-const init = (config) => {
-  getData = config.getData;
-};
 
 const run = () => {
-  data = getData();
-  data; // just for linter
+  cardsInit(generateTestData());
 };
 
-export {init, run};
+export {run};
