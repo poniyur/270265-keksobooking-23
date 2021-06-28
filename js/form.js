@@ -26,6 +26,7 @@ const setActive = (formId) => {
   const form = forms[formId];
 
   form.dom.classList.remove(form.inactiveClass);
+  form.interactiveElements.forEach((el) => el.removeAttribute('disabled'));
 };
 
 const setActiveAll = () => {
