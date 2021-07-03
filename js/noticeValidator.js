@@ -21,25 +21,51 @@ const startNoticeFormValidation = (domForm) => {
     });
   }
 
-  // цена за ночь
+  // тип жилья/цена за ночь
   {
+    const relationTypePrice = {
+      bungalow: 0,
+      flat: 1000,
+      hotel: 3000,
+      house: 5000,
+      palace: 10000,
+    };
+
+    const typeSelect = domForm.querySelector('#type');
     const priceInput = domForm.querySelector('#price');
 
-    const MIN_PRICE = priceInput.getAttribute('min');
     const MAX_PRICE = priceInput.getAttribute('max');
 
-    priceInput.addEventListener('input', () => {
+    const validatePrice = () => {
       let customValidityText = '';
 
       if( priceInput.validity.rangeUnderflow ) {
-        customValidityText = `Вы заработать то хотите? Ставьте цену не менее ${MIN_PRICE} рублей.`;
+        customValidityText = `Вы заработать то хотите? Ставьте цену не менее ${priceInput.getAttribute('min')} рублей.`;
       } else if( priceInput.validity.rangeOverflow ) {
         customValidityText = `Такую цену осилит только Скурдж Макдак. Пожалуйста, сделайте скидочку, чтобы цена была меньше ${MAX_PRICE} рублей.`;
       }
 
       priceInput.setCustomValidity(customValidityText);
       priceInput.reportValidity();
+    };
+
+    const typeChanged = () => {
+      priceInput.setAttribute('min', relationTypePrice[typeSelect.value]);
+      priceInput.setAttribute('placeholder', relationTypePrice[typeSelect.value]);
+      if( priceInput.value > 0 ) {
+        validatePrice();
+      }
+    };
+
+    priceInput.addEventListener('input', () => {
+      validatePrice();
     });
+
+    typeSelect.addEventListener('input', () => {
+      typeChanged();
+    });
+
+    typeChanged();
   }
 
   // количество комнат и количество гостей
@@ -84,6 +110,25 @@ const startNoticeFormValidation = (domForm) => {
     // call funcs
     roomSelectChanged();
   }
+
+  // Время заезда и выезда
+  {
+    const timeinSelect = domForm.querySelector('#timein');
+    const timeoutSelect = domForm.querySelector('#timeout');
+
+    const synhronizeValues = (from, to) => {
+      to.value = from.value;
+    };
+
+    timeinSelect.addEventListener('input', () => {
+      synhronizeValues(timeinSelect, timeoutSelect);
+    });
+
+    timeoutSelect.addEventListener('input', () => {
+      synhronizeValues(timeoutSelect, timeinSelect);
+    });
+  }
+
 };
 
 
