@@ -3,19 +3,20 @@ const startNoticeFormValidation = (domForm) => {
   // заголовок объявления
   {
     const titleInput = domForm.querySelector('#title');
-    // const MIN_TITLE_LENGTH = titleInput.getAttribute('minlength');
-    // const MAX_TITLE_LENGTH = titleInput.getAttribute('maxlength');
+    const MIN_TITLE_LENGTH = titleInput.getAttribute('minlength');
+    const MAX_TITLE_LENGTH = titleInput.getAttribute('maxlength');
 
     titleInput.addEventListener('input', () => {
-      // const valueLength = titleInput.value.length;
+      const titleLength = titleInput.value.length;
+      let customValidityText = '';
 
-      // if( valueLength < MIN_TITLE_LENGTH ) {
-      //   titleInput.setCustomValidity(`${valueLength}/${MIN_TITLE_LENGTH}`);
-      // } else if( valueLength > MAX_TITLE_LENGTH ) {
-      //   titleInput.setCustomValidity(`${MAX_TITLE_LENGTH}/${valueLength}`);
-      // } else {
-      //   titleInput.setCustomValidity('');
-      // }
+      if( titleInput.validity.tooShort ) {
+        customValidityText = `Минимальная длина заголовка объявления - ${MIN_TITLE_LENGTH} символов. У вас - ${titleLength}.`;
+      } else if(titleInput.validity.tooLong) {
+        customValidityText = `Слишком длинный заголовок. Используйте не более ${MAX_TITLE_LENGTH} символов. У вас - ${titleLength}.`;
+      }
+
+      titleInput.setCustomValidity(customValidityText);
       titleInput.reportValidity();
     });
   }
@@ -23,14 +24,20 @@ const startNoticeFormValidation = (domForm) => {
   // цена за ночь
   {
     const priceInput = domForm.querySelector('#price');
-    // const MAX_VALUE = priceInput.getAttribute('max');
+
+    const MIN_PRICE = priceInput.getAttribute('min');
+    const MAX_PRICE = priceInput.getAttribute('max');
 
     priceInput.addEventListener('input', () => {
-      // if( priceInput.value > MAX_VALUE ) {
-      //   priceInput.setCustomValidity('Максимальное значение — 1000000');
-      // } else {
-      //   priceInput.setCustomValidity('');
-      // }
+      let customValidityText = '';
+
+      if( priceInput.validity.rangeUnderflow ) {
+        customValidityText = `Вы заработать то хотите? Ставьте цену не менее ${MIN_PRICE} рублей.`;
+      } else if( priceInput.validity.rangeOverflow ) {
+        customValidityText = `Такую цену осилит только Скурдж Макдак. Пожалуйста, сделайте скидочку, чтобы цена была меньше ${MAX_PRICE} рублей.`;
+      }
+
+      priceInput.setCustomValidity(customValidityText);
       priceInput.reportValidity();
     });
   }
