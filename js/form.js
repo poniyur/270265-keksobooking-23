@@ -13,6 +13,10 @@ const register = (config) => {
 
   forms.push(form);
 
+  if( config.formCallback ) {
+    config.formCallback(form.dom);
+  }
+
   return forms.length - 1;
 };
 
@@ -40,5 +44,6 @@ const setInactiveAll = () => {
     setInactive(id);
   }
 };
+
 
 export {setInactiveAll, setActiveAll, register};

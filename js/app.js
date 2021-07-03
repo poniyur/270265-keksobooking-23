@@ -2,28 +2,30 @@ import {generateTestData} from './dataGenerator.js';
 import {init as cardsInit} from './cards.js';
 import {
   setInactiveAll as setInactiveAllForms,
-  // setActiveAll as setActiveAllForms, функция временно не используется
+  setActiveAll as setActiveAllForms,
   register as registerForm
 } from './form.js';
+import {startNoticeFormValidation} from './noticeValidator.js';
 
-let adFormId = -1;
+let noticeFormId = -1;
 let mapFilterFormId = -1;
 
 const setInactive = () => {
   setInactiveAllForms();
 };
 
-// пока не нужно вызывать, заккоменчу
-// const setActive = () => {
-//  setActiveAllForms
-// };
+
+const setActive = () => {
+  setActiveAllForms();
+};
 
 const run = () => {
 
-  adFormId = registerForm({
+  noticeFormId = registerForm({
     formSelector: '.ad-form',
     inactiveClass: 'ad-form--disabled',
     interactiveElementSelectors: ['fieldset'],
+    formCallback: startNoticeFormValidation,
   });
 
   mapFilterFormId = registerForm({
@@ -32,7 +34,7 @@ const run = () => {
     interactiveElementSelectors: ['select', 'fieldset'],
   });
 
-  adFormId, mapFilterFormId; // чтобы линтер не ругался
+  noticeFormId, mapFilterFormId; // чтобы линтер не ругался
 
   setInactive();
 
@@ -40,7 +42,7 @@ const run = () => {
   cardsInit(generateTestData());
 
   // after map ready
-  // setActive();
+  setActive();
 };
 
 export {run};
