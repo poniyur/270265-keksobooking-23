@@ -51,6 +51,7 @@ const getAnnounce = () => {
   generateLocation();
 
   return {
+    id: announceIndex,
     author: {
       avatar: getAvatar(),
     },
@@ -66,6 +67,8 @@ const getAnnounce = () => {
       features:   getFeatures(),
       description: getDescription(),
       photos: getPhotos(),
+      latitude,
+      longitude,
     },
     location: getLocation(),
   };

@@ -45,5 +45,9 @@ const setInactiveAll = () => {
   }
 };
 
+const changeInput = (formId, selector, value) => {
+  const form = forms[formId];
+  form.dom.querySelector(selector).value = value;
+};
 
-export {setInactiveAll, setActiveAll, register};
+export {setInactiveAll, setActiveAll, register, changeInput};
