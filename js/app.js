@@ -71,7 +71,7 @@ const run = () => {
 
     markers: {
       main: {
-        iconUrl: '/img/main-pin.svg',
+        iconUrl: './img/main-pin.svg',
         iconSize: [40, 40],
         iconAnchor: [20, 40],
         draggable: true,
@@ -86,7 +86,7 @@ const run = () => {
       },
 
       notice: {
-        iconUrl: '/img/pin.svg',
+        iconUrl: './img/pin.svg',
         iconSize: [40, 40],
         iconAnchor: [20, 40],
         points: noticePoints,

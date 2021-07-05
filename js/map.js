@@ -62,7 +62,7 @@ const init = (config = {}) => {
         iconAnchor: groupData.iconAnchor,
       });
 
-      const draggable = new Boolean(groupData.draggable);
+      const draggable = Boolean(groupData.draggable);
 
       if(groupData.points) {
         groupData.points.forEach((point) => {
@@ -72,8 +72,8 @@ const init = (config = {}) => {
               lng: point.long,
             },
             {
-              icon,
               draggable,
+              icon,
             },
           );
 
