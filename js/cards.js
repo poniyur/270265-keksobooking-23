@@ -1,6 +1,5 @@
 const TEMPLATE_SELECTOR = '#card';
 const TEMPLATE_BODY_SELECTOR = '.popup';
-const TARGET_SELECTOR = '#map-canvas';
 
 const typeRelationCyr = {
   flat: 'Квартира',
@@ -11,9 +10,6 @@ const typeRelationCyr = {
 };
 
 const templateElement = document.querySelector(TEMPLATE_SELECTOR).content.querySelector(TEMPLATE_BODY_SELECTOR);
-const target = document.querySelector(TARGET_SELECTOR);
-
-const data = [];
 
 const getNewCard = (cardData) => {
 
@@ -161,22 +157,26 @@ const getNewCard = (cardData) => {
     }
   }
 
-  return newCard;
+  return {
+    id: cardData.id,
+    lat: offer.latitude,
+    long: offer.longitude,
+    html: newCard,
+  };
 };
 
-const renderAll = () => {
-  const cardsFragment = document.createDocumentFragment();
-  data.forEach((cardData) => cardsFragment.appendChild(getNewCard(cardData)));
-  target.appendChild(cardsFragment);
+const createCards = (data) => {
+  const cards = {};
+
+  data.forEach((cardData) => {
+    const newCard = getNewCard(cardData);
+    cards[newCard.id] = newCard;
+  });
+
+  return cards;
 };
 
-const init = (_data) => {
-  // only one!!
-  data.push(_data[0]);
-  // data.push(..._data);
-  renderAll(data);
-};
-
+const init = (data) => createCards(data);
 
 export {init};
 
