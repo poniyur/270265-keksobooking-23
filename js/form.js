@@ -13,10 +13,6 @@ const register = (config) => {
 
   forms.push(form);
 
-  if( config.formCallback ) {
-    config.formCallback(form.dom);
-  }
-
   return forms.length - 1;
 };
 
@@ -45,9 +41,4 @@ const setInactiveAll = () => {
   }
 };
 
-const changeInput = (formId, selector, value) => {
-  const form = forms[formId];
-  form.dom.querySelector(selector).value = value;
-};
-
-export {setInactiveAll, setActiveAll, register, changeInput};
+export {setInactiveAll, setActiveAll, register};

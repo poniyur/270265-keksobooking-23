@@ -72,7 +72,7 @@
     <!-- Форма объявления -->
     <section class="notice">
       <h2 class="notice__title">Ваше объявление</h2>
-      <form action="https://23.javascript.pages.academy/keksobooking" class="ad-form" method="post" enctype="multipart/form-data" autocomplete="off">
+      <form action="https://23.javascript.pages.academy/keksobooking" class="ad-form" method="post" enctype="multipart/form-data" autocomplete="off" novalidate>
         <fieldset class="ad-form-header">
           <legend class="ad-form-header__title">Ваша фотография (для карты)</legend>
           <div class="ad-form-header__upload">
@@ -190,6 +190,17 @@
       <li><a href="https://vk.com/htmlacademy" class="contacts__link contacts__link--vk">VK</a></li>
     </ul>
   </footer>
+
+  <!-- контейнер для сообщений -->
+  <section class="alerts">
+  </section>
+
+  <!-- Сообщение пользователю -->
+  <template id="alert">
+    <div class="alert alerts__alert"> <!-- --success --danger -->
+      <p class="alert__text"></p>
+    </div>
+  </template>
 
   <!-- Карточка объявления -->
   <template id="card">

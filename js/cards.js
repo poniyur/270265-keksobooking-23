@@ -158,25 +158,20 @@ const getNewCard = (cardData) => {
   }
 
   return {
-    id: cardData.id,
-    lat: offer.latitude,
-    long: offer.longitude,
+    lat: cardData.location.lat,
+    long: cardData.location.lng,
     html: newCard,
   };
 };
 
 const createCards = (data) => {
-  const cards = {};
-
+  const cards = [];
   data.forEach((cardData) => {
     const newCard = getNewCard(cardData);
-    cards[newCard.id] = newCard;
+    cards.push(newCard);
   });
-
   return cards;
 };
 
-const init = (data) => createCards(data);
-
-export {init};
+export {createCards};
 

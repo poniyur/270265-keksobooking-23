@@ -1028,3 +1028,32 @@ fieldset {
 .hidden {
   display: none;
 }
+
+.alerts {
+  position: fixed;
+  top: 0;
+  z-index: 1200;
+  width: inherit;
+  max-width: inherit;
+  min-width: inherit;
+  width: 100%;
+}
+
+.alerts__alert {
+  padding: 0px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.alerts__alert--success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alerts__alert--danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
