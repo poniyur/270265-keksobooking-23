@@ -110,7 +110,7 @@ const getNewCard = (cardData) => {
       const featureSelectors = offer.features.map((feature) => `popup__feature--${feature}`);
       newCard.querySelectorAll('.popup__feature')
         .forEach((featureElement) => {
-          if(featureSelectors.includes(featureElement.classList[1])) {
+          if(!featureSelectors.includes(featureElement.classList[1])) {
             featureElement.remove();
           }
         });

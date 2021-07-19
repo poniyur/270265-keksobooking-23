@@ -4,6 +4,7 @@ let formData = new FormData(form);
 
 const formFilters = {
   'housing-type' : (offer, filterValue) => {
+    filterValue = filterValue.pop();
     if( filterValue === 'any' ) {
       return true;
     }
@@ -12,6 +13,7 @@ const formFilters = {
   },
 
   'housing-price' : (offer, filterValue) => {
+    filterValue = filterValue.pop();
     if( filterValue === 'any' ) {
       return true;
     }
@@ -32,6 +34,7 @@ const formFilters = {
   },
 
   'housing-rooms' : (offer, filterValue) => {
+    filterValue = filterValue.pop();
     if( filterValue === 'any' ) {
       return true;
     }
@@ -40,6 +43,7 @@ const formFilters = {
   },
 
   'housing-guests' : (offer, filterValue) => {
+    filterValue = filterValue.pop();
     if( filterValue === 'any' ) {
       return true;
     }
@@ -50,6 +54,10 @@ const formFilters = {
   features: (offer, filterFeatures) => {
     if( filterFeatures === null ) {
       return true;
+    }
+
+    if( !offer.features ) {
+      return false;
     }
 
     for( let index = 0; index < filterFeatures.length; index++ ) {
@@ -64,7 +72,7 @@ const formFilters = {
 const checkOne = (offer) => {
   for( const filterName in formFilters ) {
     const filterFunc = formFilters[filterName];
-    const check = filterFunc(offer, formData.get(filterName));
+    const check = filterFunc(offer, formData.getAll(filterName));
     if( !check ) {
       return false;
     }

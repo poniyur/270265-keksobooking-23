@@ -174,8 +174,8 @@ const onSubmit = (ev) => {
   ev.preventDefault();
 
   if( !validate() ) {
-    // reportUserError('Заполните форму.');
-    // return;
+    reportUserError('Заполните форму.');
+    return;
   }
   submitForm();
 };
@@ -183,7 +183,7 @@ const onSubmit = (ev) => {
 const onReset = () => {
   setTimeout(() => {
     resetFormAndMap();
-  }, 1);
+  });
 };
 
 const init = () => {
