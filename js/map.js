@@ -1,25 +1,35 @@
-let startLat = 0;
-let startLong = 0;
-let startZoom = 0;
-
 let latitude = 0;
 let longitude = 0;
 let zoom = 13;
 
 let map = undefined;
+let noticeLayer = undefined;
+let mainMarkerLayer = undefined;
 
-const markerGroups = {};
-const markers = {};
+const TOKIYO_LAT = 35.68449;
+const TOKIYO_LONG = 139.75124;
 
-const createMap = (id) => {
-  const _map = L.map(id);
-  L.tileLayer(
-    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+
+const config = {
+  target: 'map-canvas',
+  lat: TOKIYO_LAT,
+  long:TOKIYO_LONG,
+
+  markers: {
+    main: {
+      iconUrl: './img/main-pin.svg',
+      iconSize: [52, 52],
+      iconAnchor: [26, 52],
+      draggable: true,
+      dragEndCallback: undefined,
+      points: [
+        {
+          lat: TOKIYO_LAT,
+          long: TOKIYO_LONG,
+        },
+      ],
     },
-  ).addTo(_map);
-  return _map;
+  },
 };
 
 const move = () => {
@@ -34,70 +44,89 @@ const setPosition = (lat = latitude, long = longitude, _zoom = zoom) => {
 };
 
 const resetView = () => {
-  setPosition(startLat, startLong, startZoom);
+  setPosition(config.lat, config.long, config.zoom);
 };
 
+const createMarkers = (data) => {
 
-const init = (config = {}) => {
+  const group = L.layerGroup().addTo(map);
 
-  map = createMap(config.target);
+  const icon = L.icon({
+    iconUrl: data.iconUrl,
+    iconSize: data.iconSize,
+    iconAnchor: data.iconAnchor,
+  });
 
-  setPosition(config.lat, config.long, config.zoom);
+  const draggable = Boolean(data.draggable);
 
+  if(data.points) {
+    data.points.forEach((point) => {
+      const marker = L.marker(
+        L.latLng( point.lat, point.long),
+        {
+          draggable,
+          icon,
+        },
+      );
 
-  startLat = latitude;
-  startLong = longitude;
-  startZoom = zoom;
-
-  if( config.markers ) {
-    for( const markerGroup in config.markers ) {
-
-      const groupData = config.markers[markerGroup];
-      const group = markerGroups[markerGroup]  = L.layerGroup().addTo(map);
-      markers[markerGroup] = {};
-
-      const icon = L.icon({
-        iconUrl: groupData.iconUrl,
-        iconSize: groupData.iconSize,
-        iconAnchor: groupData.iconAnchor,
-      });
-
-      const draggable = Boolean(groupData.draggable);
-
-      if(groupData.points) {
-        groupData.points.forEach((point) => {
-          const marker = markers[markerGroup][point.id] = L.marker(
-            {
-              lat: point.lat,
-              lng: point.long,
-            },
-            {
-              draggable,
-              icon,
-            },
-          );
-
-          if( groupData.dragEndCallback ) {
-            marker.on('dragend', () => {
-              groupData.dragEndCallback(marker._latlng.lat, marker._latlng.lng);
-            });
-          }
-
-          if( point.html ) {
-            marker.bindPopup(point.html, {
-              keepInView: true,
-            });
-          }
-          marker.addTo(group);
+      if( data.dragEndCallback ) {
+        marker.on('dragend', () => {
+          const latLng = marker.getLatLng();
+          data.dragEndCallback(latLng.lat, latLng.lng);
         });
       }
-    }
+
+      if( point.html ) {
+        marker.bindPopup(point.html, {
+          keepInView: true,
+        });
+      }
+      marker.addTo(group);
+    });
   }
 
-  if( config.callback ) {
-    config.callback();
-  }
+  return group;
 };
 
+const createNoticeMarkers = (data) => {
+  if( noticeLayer ) {
+    map.removeLayer(noticeLayer);
+  }
+  noticeLayer = createMarkers({
+    iconUrl: './img/pin.svg',
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    points: data,
+  });
 
-export {init, resetView};
+};
+
+const createMainMarker = () => {
+  if( mainMarkerLayer ) {
+    map.removeLayer(mainMarkerLayer);
+  }
+  mainMarkerLayer = createMarkers(config.markers.main, true);
+};
+
+const resetMainMarker = () => {
+  createMainMarker();
+};
+
+const createMap = (dragEndCallback) => {
+
+  config.markers.main.dragEndCallback = dragEndCallback;
+
+  map = L.map(config.target);
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    },
+  ).addTo(map);
+
+  resetView();
+  createMainMarker();
+
+};
+
+export {createMap, createNoticeMarkers, resetMainMarker};

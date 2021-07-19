@@ -110,7 +110,7 @@ const getNewCard = (cardData) => {
       const featureSelectors = offer.features.map((feature) => `popup__feature--${feature}`);
       newCard.querySelectorAll('.popup__feature')
         .forEach((featureElement) => {
-          if(featureSelectors.includes(featureElement.classList[1])) {
+          if(!featureSelectors.includes(featureElement.classList[1])) {
             featureElement.remove();
           }
         });
@@ -158,25 +158,20 @@ const getNewCard = (cardData) => {
   }
 
   return {
-    id: cardData.id,
-    lat: offer.latitude,
-    long: offer.longitude,
+    lat: cardData.location.lat,
+    long: cardData.location.lng,
     html: newCard,
   };
 };
 
 const createCards = (data) => {
-  const cards = {};
-
+  const cards = [];
   data.forEach((cardData) => {
     const newCard = getNewCard(cardData);
-    cards[newCard.id] = newCard;
+    cards.push(newCard);
   });
-
   return cards;
 };
 
-const init = (data) => createCards(data);
-
-export {init};
+export {createCards};
 
