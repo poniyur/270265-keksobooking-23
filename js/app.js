@@ -11,6 +11,8 @@ import {init as initNoticeForm, changeAddress} from './noticeForm.js';
 import {filterData, activateFilterForm} from './filterForm.js';
 
 let noticesData = null;
+let renderTimerId = null;
+const RERENDER_COOLDOWN = 500;
 
 const setActive = () => {
   setActiveAllForms();
@@ -25,7 +27,12 @@ const dragEndSetNoticeCallback = (lat, long) => {
 };
 
 const rerenderMarkers = () => {
-  createNoticeMarkers( createCards( filterData(noticesData) ) );
+  if( renderTimerId ) {
+    clearTimeout(renderTimerId);
+  }
+  renderTimerId = setTimeout(
+    () => createNoticeMarkers( createCards( filterData(noticesData)))
+    , RERENDER_COOLDOWN);
 };
 
 const run = () => {
