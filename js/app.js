@@ -9,6 +9,7 @@ import {createCards} from './cards.js';
 import {reportUserError} from './alert.js';
 import {init as initNoticeForm, changeAddress} from './noticeForm.js';
 import {filterData, activateFilterForm} from './filterForm.js';
+import {debounce} from './utils/debounce.js';
 
 let noticesData = null;
 
@@ -59,7 +60,7 @@ const run = () => {
     })
     .then((data) => createCards(data))
     .then((cards) => createNoticeMarkers(cards))
-    .then(() => activateFilterForm(rerenderMarkers))
+    .then(() => activateFilterForm(debounce(rerenderMarkers, 500)))
     .catch((err) => {
       reportUserError(err);
     });
