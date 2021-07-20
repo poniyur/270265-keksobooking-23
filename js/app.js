@@ -9,10 +9,9 @@ import {createCards} from './cards.js';
 import {reportUserError} from './alert.js';
 import {init as initNoticeForm, changeAddress} from './noticeForm.js';
 import {filterData, activateFilterForm} from './filterForm.js';
+import {debounce} from './utils/debounce.js';
 
 let noticesData = null;
-let renderTimerId = null;
-const RERENDER_COOLDOWN = 500;
 
 const setActive = () => {
   setActiveAllForms();
@@ -27,12 +26,7 @@ const dragEndSetNoticeCallback = (lat, long) => {
 };
 
 const rerenderMarkers = () => {
-  if( renderTimerId ) {
-    clearTimeout(renderTimerId);
-  }
-  renderTimerId = setTimeout(
-    () => createNoticeMarkers( createCards( filterData(noticesData)))
-    , RERENDER_COOLDOWN);
+  createNoticeMarkers( createCards( filterData(noticesData) ) );
 };
 
 const run = () => {
@@ -66,7 +60,7 @@ const run = () => {
     })
     .then((data) => createCards(data))
     .then((cards) => createNoticeMarkers(cards))
-    .then(() => activateFilterForm(rerenderMarkers))
+    .then(() => activateFilterForm(debounce(rerenderMarkers, 500)))
     .catch((err) => {
       reportUserError(err);
     });
