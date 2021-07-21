@@ -103,5 +103,8 @@ const activateFilterForm = (callback) => {
   });
 };
 
+const resetFilterForm = () => {
+  form.reset();
+};
 
-export {filterData, activateFilterForm};
+export {filterData, activateFilterForm, resetFilterForm};

@@ -1,6 +1,8 @@
 import { reportUserError } from './alert.js';
 import { reportSuccess, reportError } from './noticeFormReport.js';
 import { resetMainMarker } from './map.js';
+import { registerPreviewInput, registerPreviewInputMultiple } from './previewImg.js';
+import { resetFilterForm } from './filterForm.js';
 
 const form = document.querySelector('.ad-form');
 
@@ -32,6 +34,8 @@ const addressInput = form.querySelector('#address');
 
 const TOKIYO_LAT = 35.68449;
 const TOKIYO_LONG = 139.75124;
+
+let onResetCallback = undefined;
 
 const validateTitle = () => {
 
@@ -182,16 +186,26 @@ const onSubmit = (ev) => {
 
 const onReset = () => {
   setTimeout(() => {
+    resetFilterForm();
     resetFormAndMap();
+    onResetCallback();
   });
 };
 
-const init = () => {
+const init = (_onResetCallback) => {
+  onResetCallback = _onResetCallback;
 
   form.addEventListener('submit', onSubmit, false);
   form.addEventListener('reset', onReset, false);
   resetAddress();
   startNoticeFormValidation();
+
+  registerPreviewInput(form.querySelector('#avatar'), form.querySelector('.ad-form-header__preview img'));
+  registerPreviewInputMultiple(
+    form.querySelector('#images'),
+    form.querySelector('.ad-form__photo-container'),
+    '.ad-form__photo:empty',
+  );
 };
 
 export {init, submitForm, changeAddress};

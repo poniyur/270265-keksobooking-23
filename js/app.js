@@ -29,6 +29,10 @@ const rerenderMarkers = () => {
   createNoticeMarkers( createCards( filterData(noticesData) ) );
 };
 
+const debouncedRerenderMarkers = debounce(rerenderMarkers, 500);
+
+const setNoticeFormResetCallback = rerenderMarkers;
+
 const run = () => {
 
   // notrice form
@@ -38,7 +42,7 @@ const run = () => {
     interactiveElementSelectors: ['fieldset'],
   });
 
-  initNoticeForm();
+  initNoticeForm(setNoticeFormResetCallback);
 
   // map filter
   registerForm({
@@ -60,7 +64,7 @@ const run = () => {
     })
     .then((data) => createCards(data))
     .then((cards) => createNoticeMarkers(cards))
-    .then(() => activateFilterForm(debounce(rerenderMarkers, 500)))
+    .then(() => activateFilterForm(debouncedRerenderMarkers))
     .catch((err) => {
       reportUserError(err);
     });
