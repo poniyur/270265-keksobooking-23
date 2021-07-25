@@ -1,6 +1,13 @@
+import {register as registerActivator, setInactive, setActive} from './form-activator.js';
+
 const MAX_COUNT = 10;
 const form = document.querySelector('.map__filters');
 let formData = new FormData(form);
+const activatorId = registerActivator({
+  formSelector: '.map__filters',
+  inactiveClass: 'map__filters--disabled',
+  interactiveElementSelectors: ['select', 'fieldset'],
+});
 
 const formFilters = {
   'housing-type' : (offer, filterValue) => {
@@ -69,6 +76,14 @@ const formFilters = {
   },
 };
 
+const lock = () => {
+  setInactive(activatorId);
+};
+
+const unlock = () => {
+  setActive(activatorId);
+};
+
 const checkOne = (offer) => {
   for( const filterName in formFilters ) {
     const filterFunc = formFilters[filterName];
@@ -107,4 +122,4 @@ const resetFilterForm = () => {
   form.reset();
 };
 
-export {filterData, activateFilterForm, resetFilterForm};
+export {filterData, activateFilterForm, resetFilterForm, lock, unlock};

@@ -1,25 +1,12 @@
-import {
-  setInactiveAll as setInactiveAllForms,
-  setActiveAll as setActiveAllForms,
-  register as registerForm
-} from './form.js';
 import {createMap, createNoticeMarkers} from './map.js';
 import {fetchNotices} from './data.js';
 import {createCards} from './cards.js';
 import {reportUserError} from './alert.js';
-import {init as initNoticeForm, changeAddress} from './notice-form.js';
-import {filterData, activateFilterForm} from './filter-form.js';
+import {init as initNoticeForm, changeAddress, lock as lockNoticeForm, unlock as unlockNoticeForm} from './notice-form.js';
+import {filterData, activateFilterForm, lock as lockFilterForm, unlock as unlockFilterForm} from './filter-form.js';
 import {debounce} from './utils/debounce.js';
 
 let noticesData = null;
-
-const setActive = () => {
-  setActiveAllForms();
-};
-
-const setInactive = () => {
-  setInactiveAllForms();
-};
 
 const dragEndSetNoticeCallback = (lat, long) => {
   changeAddress(lat.toFixed(5), long.toFixed(5));
@@ -35,39 +22,24 @@ const setNoticeFormResetCallback = rerenderMarkers;
 
 const run = () => {
 
-  // notrice form
-  registerForm({
-    formSelector: '.ad-form',
-    inactiveClass: 'ad-form--disabled',
-    interactiveElementSelectors: ['fieldset'],
-  });
-
   initNoticeForm(setNoticeFormResetCallback);
 
-  // map filter
-  registerForm({
-    formSelector: '.map__filters',
-    inactiveClass: 'map__filters--disabled',
-    interactiveElementSelectors: ['select', 'fieldset'],
-  });
-
-  setInactive();
+  lockFilterForm();
+  lockNoticeForm();
 
   createMap(dragEndSetNoticeCallback);
 
-  setActive();
+  unlockNoticeForm();
 
   fetchNotices()
     .then((data) => {
-      if( !data ) {
-        throw 'Упс! Мы сейчас не можем показать вам похожие объявления. Попробуйте обновить страницу попозже';
-      }
       noticesData = data;
       return filterData(data);
     })
     .then((data) => createCards(data))
     .then((cards) => createNoticeMarkers(cards))
     .then(() => activateFilterForm(debouncedRerenderMarkers))
+    .then(() => unlockFilterForm())
     .catch((err) => {
       reportUserError(err);
     });

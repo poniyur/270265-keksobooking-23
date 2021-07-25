@@ -3,6 +3,7 @@ import { reportSuccess, reportError } from './notice-form-report.js';
 import { resetMainMarker } from './map.js';
 import { registerPreviewInput, registerPreviewInputMultiple, setDeleteOnSubmitAndReset } from './preview-img.js';
 import { resetFilterForm } from './filter-form.js';
+import {register as registerActivator, setInactive, setActive} from './form-activator.js';
 
 const form = document.querySelector('.ad-form');
 
@@ -36,6 +37,7 @@ const TOKIYO_LAT = 35.68449;
 const TOKIYO_LONG = 139.75124;
 
 let onResetCallback = undefined;
+let activatorId = -1;
 
 const validateTitle = () => {
 
@@ -191,6 +193,14 @@ const onReset = () => {
   });
 };
 
+const lock = () => {
+  setInactive(activatorId);
+};
+
+const unlock = () => {
+  setActive(activatorId);
+};
+
 const init = (_onResetCallback) => {
   onResetCallback = _onResetCallback;
 
@@ -206,8 +216,15 @@ const init = (_onResetCallback) => {
     '.ad-form__photo:empty',
   );
   setDeleteOnSubmitAndReset(form);
+
+  activatorId = registerActivator({
+    formSelector: '.ad-form',
+    inactiveClass: 'ad-form--disabled',
+    interactiveElementSelectors: ['fieldset'],
+  });
+
 };
 
-export {init, submitForm, changeAddress};
+export {init, submitForm, changeAddress, lock, unlock};
 
 

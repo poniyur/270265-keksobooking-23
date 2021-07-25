@@ -29,16 +29,4 @@ const setActive = (formId) => {
   form.interactiveElements.forEach((el) => el.removeAttribute('disabled'));
 };
 
-const setActiveAll = () => {
-  for(let id = 0; id < forms.length; ++id) {
-    setActive(id);
-  }
-};
-
-const setInactiveAll = () => {
-  for(let id = 0; id < forms.length; ++id) {
-    setInactive(id);
-  }
-};
-
-export {setInactiveAll, setActiveAll, register};
+export {register, setInactive, setActive};
