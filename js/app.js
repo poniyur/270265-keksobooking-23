@@ -7,8 +7,8 @@ import {createMap, createNoticeMarkers} from './map.js';
 import {fetchNotices} from './data.js';
 import {createCards} from './cards.js';
 import {reportUserError} from './alert.js';
-import {init as initNoticeForm, changeAddress} from './noticeForm.js';
-import {filterData, activateFilterForm} from './filterForm.js';
+import {init as initNoticeForm, changeAddress} from './notice-form.js';
+import {filterData, activateFilterForm} from './filter-form.js';
 import {debounce} from './utils/debounce.js';
 
 let noticesData = null;
@@ -59,6 +59,9 @@ const run = () => {
 
   fetchNotices()
     .then((data) => {
+      if( !data ) {
+        throw 'Упс! Мы сейчас не можем показать вам похожие объявления. Попробуйте обновить страницу попозже';
+      }
       noticesData = data;
       return filterData(data);
     })

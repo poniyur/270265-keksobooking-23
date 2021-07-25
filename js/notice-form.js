@@ -1,8 +1,8 @@
 import { reportUserError } from './alert.js';
-import { reportSuccess, reportError } from './noticeFormReport.js';
+import { reportSuccess, reportError } from './notice-form-report.js';
 import { resetMainMarker } from './map.js';
-import { registerPreviewInput, registerPreviewInputMultiple } from './previewImg.js';
-import { resetFilterForm } from './filterForm.js';
+import { registerPreviewInput, registerPreviewInputMultiple, setDeleteOnSubmitAndReset } from './preview-img.js';
+import { resetFilterForm } from './filter-form.js';
 
 const form = document.querySelector('.ad-form');
 
@@ -66,7 +66,7 @@ const validatePrice = () => {
   let validity = true;
   let customValidityText = '';
 
-  if( priceInput.validity.rangeUnderflow ) {
+  if( priceInput.validity.rangeUnderflow || priceInput.validity.valueMissing) {
     customValidityText = `Вы заработать то хотите? Ставьте цену не менее ${priceInput.getAttribute('min')} рублей.`;
   } else if( priceInput.validity.rangeOverflow ) {
     customValidityText = `Такую цену осилит только Скурдж Макдак. Пожалуйста, сделайте скидочку, чтобы цена была меньше ${MAX_PRICE} рублей.`;
@@ -176,7 +176,6 @@ const submitForm = () => {
 
 const onSubmit = (ev) => {
   ev.preventDefault();
-
   if( !validate() ) {
     reportUserError('Заполните форму.');
     return;
@@ -206,6 +205,7 @@ const init = (_onResetCallback) => {
     form.querySelector('.ad-form__photo-container'),
     '.ad-form__photo:empty',
   );
+  setDeleteOnSubmitAndReset(form);
 };
 
 export {init, submitForm, changeAddress};

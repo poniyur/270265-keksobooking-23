@@ -17,8 +17,13 @@ const registerPreviewInput = (fileChooser, preview, createImg = false) => {
       if( createImg ) {
         const newImg = preview.appendChild( document.createElement('img') );
         newImg.src = reader.result;
+        newImg.classList.add('js-preview-img');
       } else {
+        if( preview.src ) {
+          preview.setAttribute('data-preview_src_origin', preview.src);
+        }
         preview.src = reader.result;
+        preview.classList.add('js-preview-img');
       }
     });
 
@@ -48,17 +53,43 @@ const registerPreviewInputMultiple = (fileChooser, box, previewSelector) => {
         newImg.src = reader.result;
 
         preview.style.overflow = 'hidden';
+        preview.classList.add('js-preview-img');
 
         box.appendChild(newPreview);
-        preview.addEventListener('click', () => {
-          preview.remove();
-        });
       });
       reader.readAsDataURL(file);
     });
   });
 };
 
-export {registerPreviewInput, registerPreviewInputMultiple};
+const deleteImages = (form) => {
+  const images = form.querySelectorAll('.js-preview-img');
+
+  if(!images) {
+    return;
+  }
+
+  images.forEach((img) => {
+    if( img.hasAttribute('data-preview_src_origin') ) {
+      img.src = img.getAttribute('data-preview_src_origin');
+      img.classList.remove('data-preview_src_origin');
+    } else {
+      img.remove();
+    }
+
+  });
+};
+
+const setDeleteOnSubmitAndReset = (form) => {
+  form.addEventListener('submit', () => {
+    deleteImages(form);
+  });
+
+  form.addEventListener('reset', () => {
+    deleteImages(form);
+  });
+};
+
+export {registerPreviewInput, registerPreviewInputMultiple, setDeleteOnSubmitAndReset};
 
 
